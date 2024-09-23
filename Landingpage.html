@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page de Vendas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        .cart-icon {
+            font-size: 24px;
+            color: #4CAF50;
+            cursor: pointer;
+            position: relative;
+        }
+        .carrinho-lista {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            z-index: 1000;
+            right: 0;
+            margin-top: 10px;
+        }
+        .carrinho-lista ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+        .carrinho-lista ul li {
+            padding: 5px 0;
+        }
+        .carrinho-lista button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .carrinho-lista button:hover {
+            background-color: #45a049;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            display: none; /* Inicialmente ocultar as seções */
+        }
+        .product, .servico, .depoimento {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+        }
+        .product img, .servico img {
+            max-width: 100%;
+            height: auto;
+        }
+        .cta {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .cta:hover {
+            background-color: #45a049;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Bem-vindo à Nossa Loja!</h1>
+    <p>Ofertas incríveis para você!</p>
+</header>
+
+<nav>
+    <a href="#" onclick="mostrarSecao('produtos')">Produtos</a>
+    <a href="#" onclick="mostrarSecao('depoimentos')">Depoimentos</a>
+    <a href="#" onclick="mostrarSecao('servicos')">Serviços</a>
+    <span class="cart-icon" onclick="toggleCarrinho()">🛒</span>
+    <div class="carrinho-lista" id="carrinho">
+        <h3>Carrinho de Compras</h3>
+        <ul id="lista_carrinho"></ul>
+        <p id="total_carrinho">Total: R$0,00</p>
+        <button onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+</nav>
+
+<div class="container" id="produtos">
+    <h2>Nossos Produtos</h2>
+    <div class="product">
+        <h3>Produto 1</h3>
+        <img src="https://via.placeholder.com/300" alt="Produto 1">
+        <p>Descrição do Produto 1. Preço: R$99,90</p>
+        <button class="cta" onclick="comprar('Produto 1', 99.90)">Comprar Agora</button>
+    </div>
+    <div class="product">
+        <h3>Produto 2</h3>
+        <img src="https://via.placeholder.com/300" alt="Produto 2">
+        <p>Descrição do Produto 2. Preço: R$149,90</p>
+        <button class="cta" onclick="comprar('Produto 2', 149.90)">Comprar Agora</button>
+    </div>
+    <div class="product">
+        <h3>Produto 3</h3>
+        <img src="https://via.placeholder.com/300" alt="Produto 3">
+        <p>Descrição do Produto 3. Preço: R$199,90</p>
+        <button class="cta" onclick="comprar('Produto 3', 199.90)">Comprar Agora</button>
+    </div>
+</div>
+
+<div class="container" id="servicos">
+    <h2>Nossos Serviços</h2>
+    <div class="servico">
+        <h3>Serviço 1</h3>
+        <p>Consultoria personalizada.</p>
+    </div>
+    <div class="servico">
+        <h3>Serviço 2</h3>
+        <p>Suporte técnico especializado.</p>
+    </div>
+    <div class="servico">
+        <h3>Serviço 3</h3>
+        <p>Entregas rápidas e seguras.</p>
+    </div>
+</div>
+
+<div class="container" id="depoimentos">
+    <h2>Depoimentos de Clientes</h2>
+    <div class="depoimento">
+        <p>"Ótimos produtos e atendimento!" - Cliente A</p>
+    </div>
+    <div class="depoimento">
+        <p>"Comprei e recomendo! Tudo de excelente qualidade." - Cliente B</p>
+    </div>
+    <div class="depoimento">
+        <p>"Entrega rápida e produtos incríveis." - Cliente C</p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Nossa Loja. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+    let carrinho = [];
+    let total = 0;
+
+    function comprar(produto, preco) {
+        carrinho.push({ produto, preco });
+        total += preco;
+        atualizarCarrinho();
+        alert(produto + " foi adicionado ao carrinho!");
+    }
+
+    function atualizarCarrinho() {
+        const listaCarrinho = document.getElementById('lista_carrinho');
+        listaCarrinho.innerHTML = '';
+        carrinho.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.produto} - R$${item.preco.toFixed(2)}`;
+            listaCarrinho.appendChild(li);
+        });
+        document.getElementById('total_carrinho').textContent = `Total: R$${total.toFixed(2)}`;
+    }
+
+    function finalizarCompra() {
+        if (carrinho.length === 0) {
+            alert("Seu carrinho está vazio!");
+            return;
+        }
+        alert("Compra finalizada! Total: R$" + total.toFixed(2));
+        carrinho = [];
+        total = 0;
+        atualizarCarrinho();
+        toggleCarrinho(); // Esconder o carrinho após finalizar
+    }
+
+    function toggleCarrinho() {
+        const carrinhoDiv = document.getElementById('carrinho');
+        carrinhoDiv.style.display = carrinhoDiv.style.display === "none" ? "block" : "none";
+    }
+
+    function mostrarSecao(secao) {
+        // Oculta todas as seções
+        const secoes = document.querySelectorAll('.container');
+        secoes.forEach(div => {
+            div.style.display = 'none';
+        });
+        // Mostra a seção selecionada
+        document.getElementById(secao).style.display = 'block';
+    }
+
+    // Exibe a seção de produtos por padrão
+    mostrarSecao('produtos');
+</script>
+
+</body>
+</html>
